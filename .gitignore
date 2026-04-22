@@ -1,6 +1,7 @@
 node_modules/
 out/
-*.vsix
+# We ship VSIX artifacts; don't ignore them.
+# *.vsix
 .DS_Store
 *.log
 .vscode-test/
