@@ -83,15 +83,23 @@ Override any of these per-project in `.vscode/settings.json`.
 
 ## Install
 
+### From the VS Code Marketplace
+
+```bash
+code --install-extension aloncarmel.cli-agent-hub
+```
+
+Or search **"CLI Agent Hub"** in the Extensions panel → Install.
+
 ### From VSIX
 
 **One-liner:**
 ```bash
-curl -LO https://github.com/aloncarmel/agenthub/raw/main/agent-hub-0.0.12.vsix
-code --install-extension agent-hub-0.0.12.vsix
+curl -LO https://github.com/aloncarmel/agenthub/raw/main/cli-agent-hub-0.0.13.vsix
+code --install-extension cli-agent-hub-0.0.13.vsix
 ```
 
-**Or manually:** download [`agent-hub-0.0.12.vsix`](https://github.com/aloncarmel/agenthub/raw/main/agent-hub-0.0.12.vsix) → in VS Code: **Extensions → ⋯ menu → Install from VSIX…** → pick the file.
+**Or manually:** download [`cli-agent-hub-0.0.13.vsix`](https://github.com/aloncarmel/agenthub/raw/main/cli-agent-hub-0.0.13.vsix) → in VS Code: **Extensions → ⋯ menu → Install from VSIX…** → pick the file.
 
 ### Requirements
 Agent Hub is a launcher — install whichever CLIs you want side-by-side:
