@@ -1,10 +1,23 @@
 {
-  "name": "agent-hub",
-  "displayName": "Agent Hub",
+  "name": "cli-agent-hub",
+  "displayName": "CLI Agent Hub",
   "description": "Agent Hub — launch and resume Claude, Codex, Cursor, and Gemini sessions from a VS Code home tab with keyboard shortcuts and layout presets.",
-  "version": "0.0.12",
-  "publisher": "local",
+  "version": "0.0.13",
+  "publisher": "aloncarmel",
+  "author": {
+    "name": "Alon Carmel"
+  },
+  "license": "MIT",
   "icon": "logo.png",
+  "homepage": "https://github.com/aloncarmel/agenthub#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aloncarmel/agenthub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aloncarmel/agenthub/issues"
+  },
+  "qna": "marketplace",
   "engines": {
     "vscode": "^1.85.0"
   },
