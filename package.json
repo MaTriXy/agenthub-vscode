@@ -1,0 +1,285 @@
+{
+  "name": "agent-hub",
+  "displayName": "Agent Hub",
+  "description": "Agent Hub — launch and resume Claude, Codex, Cursor, and Gemini sessions from a VS Code home tab with keyboard shortcuts and layout presets.",
+  "version": "0.0.12",
+  "publisher": "local",
+  "icon": "logo.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "AI",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "claude",
+    "codex",
+    "cursor",
+    "gemini",
+    "ai",
+    "agent",
+    "cli",
+    "terminal",
+    "llm",
+    "chat",
+    "copilot"
+  ],
+  "galleryBanner": {
+    "color": "#0b0f19",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "agentCommandCenter.openHub",
+        "title": "Open Agent Hub",
+        "category": "Agent Hub",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "agentCommandCenter.refreshSessions",
+        "title": "Refresh Sessions",
+        "category": "Agent Hub",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "agentCommandCenter.restoreLayout",
+        "title": "Agent Hub: Restore Layout",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.newClaude",
+        "title": "Agent Hub: New Claude Session",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.newCodex",
+        "title": "Agent Hub: New Codex Session",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.newCursor",
+        "title": "Agent Hub: New Cursor Session",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.newGemini",
+        "title": "Agent Hub: New Gemini Session",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.resumeSession",
+        "title": "Agent Hub: Resume Session…",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.resumeLast",
+        "title": "Agent Hub: Resume Last Session",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.scanInstalled",
+        "title": "Agent Hub: Scan Installed CLIs",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.layoutSingle",
+        "title": "Agent Hub: Layout — Single",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.layoutTwoColumns",
+        "title": "Agent Hub: Layout — Two Columns",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.layoutGrid",
+        "title": "Agent Hub: Layout — Grid",
+        "category": "Agent Hub"
+      },
+      {
+        "command": "agentCommandCenter.layoutTerminalFocus",
+        "title": "Agent Hub: Layout — Terminal Focus",
+        "category": "Agent Hub"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "agentCommandCenter.openHub",
+        "key": "ctrl+alt+a",
+        "mac": "cmd+alt+a"
+      },
+      {
+        "command": "agentCommandCenter.newClaude",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c"
+      },
+      {
+        "command": "agentCommandCenter.newCodex",
+        "key": "ctrl+alt+x",
+        "mac": "cmd+alt+x"
+      },
+      {
+        "command": "agentCommandCenter.newCursor",
+        "key": "ctrl+alt+u",
+        "mac": "cmd+alt+u"
+      },
+      {
+        "command": "agentCommandCenter.newGemini",
+        "key": "ctrl+alt+g",
+        "mac": "cmd+alt+g"
+      },
+      {
+        "command": "agentCommandCenter.resumeLast",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r"
+      },
+      {
+        "command": "agentCommandCenter.resumeSession",
+        "key": "ctrl+alt+shift+r",
+        "mac": "cmd+alt+shift+r"
+      },
+      {
+        "command": "agentCommandCenter.refreshSessions",
+        "key": "ctrl+alt+shift+f",
+        "mac": "cmd+alt+shift+f"
+      },
+      {
+        "command": "agentCommandCenter.restoreLayout",
+        "key": "ctrl+alt+0",
+        "mac": "cmd+alt+0"
+      },
+      {
+        "command": "agentCommandCenter.layoutSingle",
+        "key": "ctrl+alt+1",
+        "mac": "cmd+alt+1"
+      },
+      {
+        "command": "agentCommandCenter.layoutTwoColumns",
+        "key": "ctrl+alt+2",
+        "mac": "cmd+alt+2"
+      },
+      {
+        "command": "agentCommandCenter.layoutGrid",
+        "key": "ctrl+alt+3",
+        "mac": "cmd+alt+3"
+      },
+      {
+        "command": "agentCommandCenter.layoutTerminalFocus",
+        "key": "ctrl+alt+4",
+        "mac": "cmd+alt+4"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agentCommandCenter",
+          "title": "Agent Hub",
+          "icon": "logo.png"
+        }
+      ]
+    },
+    "views": {
+      "agentCommandCenter": [
+        {
+          "id": "agentCommandCenter.launcher",
+          "name": "Agent Hub",
+          "type": "webview"
+        }
+      ],
+      "explorer": [
+        {
+          "id": "agentCommandCenter.explorerSessions",
+          "name": "Agent Sessions"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "agentCommandCenter.refreshSessions",
+          "when": "view == agentCommandCenter.explorerSessions",
+          "group": "navigation"
+        },
+        {
+          "command": "agentCommandCenter.openHub",
+          "when": "view == agentCommandCenter.explorerSessions",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Agent Command Center",
+      "properties": {
+        "agentCommandCenter.defaultLayoutPreset": {
+          "type": "string",
+          "enum": [
+            "single-agent",
+            "two-columns",
+            "grid",
+            "terminal-focus"
+          ],
+          "default": "two-columns"
+        },
+        "agentCommandCenter.useEditorAreaTerminals": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open new agent terminals as editor tabs (side-by-side). When false, terminals open in the bottom panel."
+        },
+        "agentCommandCenter.focusTerminalOnLaunch": {
+          "type": "boolean",
+          "default": true
+        },
+        "agentCommandCenter.keepExplorerVisible": {
+          "type": "boolean",
+          "default": true
+        },
+        "agentCommandCenter.preferredTerminalArrangement": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "horizontal",
+            "vertical"
+          ],
+          "default": "auto"
+        },
+        "agentCommandCenter.claudeCommand": {
+          "type": "string",
+          "default": "claude",
+          "description": "Command used to launch the Claude CLI."
+        },
+        "agentCommandCenter.codexCommand": {
+          "type": "string",
+          "default": "codex",
+          "description": "Command used to launch the Codex CLI."
+        },
+        "agentCommandCenter.cursorCommand": {
+          "type": "string",
+          "default": "cursor-agent",
+          "description": "Command used to launch the Cursor CLI."
+        },
+        "agentCommandCenter.geminiCommand": {
+          "type": "string",
+          "default": "gemini",
+          "description": "Command used to launch the Gemini CLI."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
