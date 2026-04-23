@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.0.16 — 2026-04-23
+
+Two frequently-requested QoL improvements.
+
+- **Open session in its own folder.** Clicking a session whose `cwd` is
+  different from the current workspace now opens that folder in a new
+  VS Code window and resumes the chat there automatically. If the
+  session already belongs to the current folder, it resumes in place
+  like before. Handoff between windows uses `globalState` (expires
+  after 2 minutes).
+- **"Recent chats in this directory" section** on the hub tab — shows
+  sessions whose working directory matches the currently-open workspace,
+  above the general Recent Sessions list. If you're in a repo you've
+  worked in before, your past conversations for that repo are now one
+  click away.
+
 ## 0.0.15 — 2026-04-23
 
 Fixes hub buttons.

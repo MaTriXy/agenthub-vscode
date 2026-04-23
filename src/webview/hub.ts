@@ -127,7 +127,13 @@ export function renderHtml(
     ? `<p class="muted">No supported CLIs detected. Install one of: ${adapters.map(a => esc(a.displayName)).join(', ')}.</p>`
     : '';
 
-  const recentList = sessions.slice(0, 10).map((s) => {
+  const inFolder = workspacePath
+    ? sessions.filter((s) => s.workspacePath === workspacePath || (s.cwd === workspacePath))
+    : [];
+  const inFolderIds = new Set(inFolder.map((s) => s.sessionId));
+  const otherSessions = sessions.filter((s) => !inFolderIds.has(s.sessionId));
+
+  const renderSession = (s: CliSession) => {
     const title = s.title || s.sessionId;
     const folder = s.workspacePath ? basename(s.workspacePath) : '';
     const when = s.updatedAt ? relative(s.updatedAt) : '';
@@ -137,7 +143,10 @@ export function renderHtml(
       <span class="recent-title">${esc(title)}</span>
       <span class="recent-meta">${esc(s.adapterId)}${folder ? ' · ' + esc(folder) : ''} · ${esc(when)}</span>
     </a>`;
-  }).join('');
+  };
+
+  const inFolderList = inFolder.slice(0, 10).map(renderSession).join('');
+  const recentList = otherSessions.slice(0, 10).map(renderSession).join('');
 
   const layoutTiles = [
     { id: 'Single',         label: 'Single',         svg: tileSingle,      kbd: SHORTCUTS.layoutSingle },
@@ -347,10 +356,14 @@ export function renderHtml(
 
     <div class="columns">
       <div>
-        <h2>Recent Sessions</h2>
+        ${inFolderList ? `
+          <h2>Recent chats in this directory</h2>
+          ${inFolderList}
+        ` : ''}
+        <h2${inFolderList ? '' : ''}>Recent Sessions</h2>
         ${sessions.length === 0
           ? '<p class="muted" style="text-align:left">No sessions yet.</p>'
-          : recentList}
+          : (recentList || '<p class="muted" style="text-align:left">No other sessions.</p>')}
       </div>
       <div>
         <h2>Layouts</h2>

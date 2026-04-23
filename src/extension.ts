@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
     });
   };
 
-  const resume = async (session: CliSession) => {
+  const resumeInPlace = async (session: CliSession) => {
     const adapter = adapters.find((a) => a.id === session.adapterId);
     if (!adapter) return;
     const ctx = launchContext();
@@ -96,6 +96,31 @@ export async function activate(context: vscode.ExtensionContext) {
       focus: ctx.focusTerminal,
       editorArea: ctx.openInEditorArea,
     });
+  };
+
+  const resume = async (session: CliSession) => {
+    const currentFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    const target = session.cwd;
+    // If the session belongs to a different folder that exists on disk,
+    // open that folder in a new VS Code window and hand the resume off
+    // via shared globalState; the new window's extension host will
+    // pick it up on activate().
+    if (target && fs.existsSync(target) && target !== currentFolder) {
+      await context.globalState.update('agentHub.pendingResume', {
+        targetFolder: target,
+        adapterId: session.adapterId,
+        sessionId: session.sessionId,
+        title: session.title,
+        workspacePath: session.workspacePath,
+        updatedAt: session.updatedAt,
+        cwd: session.cwd,
+        ts: Date.now(),
+      });
+      log(`resume: opening ${target} in new window for session ${session.sessionId}`);
+      await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(target), { forceNewWindow: true });
+      return;
+    }
+    await resumeInPlace(session);
   };
 
   context.subscriptions.push(
@@ -165,6 +190,25 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   await refresh();
+
+  // Pick up a pending resume handed over from another VS Code window.
+  try {
+    const pending = context.globalState.get<any>('agentHub.pendingResume');
+    const here = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    if (pending && here && pending.targetFolder === here && Date.now() - (pending.ts ?? 0) < 120_000) {
+      log(`consuming pending resume for ${pending.sessionId}`);
+      await context.globalState.update('agentHub.pendingResume', undefined);
+      // Small delay so the UI is settled before the terminal opens.
+      setTimeout(() => { void resumeInPlace(pending as CliSession); }, 800);
+    } else if (pending) {
+      // Stale or for a different folder — let it expire on its own.
+      if (Date.now() - (pending.ts ?? 0) >= 120_000) {
+        await context.globalState.update('agentHub.pendingResume', undefined);
+      }
+    }
+  } catch (err) {
+    log('pending-resume pickup failed: ' + (err as Error).message);
+  }
 }
 
 export function deactivate() {}
