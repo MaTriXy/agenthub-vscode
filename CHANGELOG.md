@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.17 — 2026-04-23
+
+- When a session opens in a new VS Code window, the Agent Hub tab now
+  opens automatically alongside the resumed terminal — so the new
+  window lands in the same familiar surface as the original.
+
 ## 0.0.16 — 2026-04-23
 
 Two frequently-requested QoL improvements.

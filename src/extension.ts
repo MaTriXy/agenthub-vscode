@@ -198,7 +198,9 @@ export async function activate(context: vscode.ExtensionContext) {
     if (pending && here && pending.targetFolder === here && Date.now() - (pending.ts ?? 0) < 120_000) {
       log(`consuming pending resume for ${pending.sessionId}`);
       await context.globalState.update('agentHub.pendingResume', undefined);
-      // Small delay so the UI is settled before the terminal opens.
+      // Open the Hub tab so the user lands in a familiar place, then
+      // fire the resume once the window has settled.
+      await vscode.commands.executeCommand('agentCommandCenter.openHub');
       setTimeout(() => { void resumeInPlace(pending as CliSession); }, 800);
     } else if (pending) {
       // Stale or for a different folder — let it expire on its own.
