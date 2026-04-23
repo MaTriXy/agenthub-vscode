@@ -116,7 +116,7 @@ export function renderHtml(
 
   const startButtons = installedAdapters.map((a, i) => `
     ${i > 0 ? '<span class="start-sep">·</span>' : ''}
-    <a class="start-link" href="#" onclick="post({type:'newSession', adapterId:'${a.id}'});return false;">
+    <a class="start-link" href="#" data-action="newSession" data-adapter="${a.id}">
       <span class="start-icon">${iconFor(a.id)}</span>
       <span class="start-name">${esc(a.displayName.replace(/ CLI$/, ''))}</span>
       <span class="kbd kbd-xl">${SHORTCUTS[a.id] ?? ''}</span>
@@ -132,7 +132,7 @@ export function renderHtml(
     const folder = s.workspacePath ? basename(s.workspacePath) : '';
     const when = s.updatedAt ? relative(s.updatedAt) : '';
     return `
-    <a class="recent" href="#" onclick='post({type:"resume", session:${JSON.stringify(s).replace(/'/g, "&#39;")}});return false;' title="${esc(s.workspacePath ?? '')}\n${esc(s.sessionId)}">
+    <a class="recent" href="#" data-action="resume" data-session="${esc(JSON.stringify(s))}" title="${esc(s.workspacePath ?? '')}\n${esc(s.sessionId)}">
       <span class="recent-icon">${iconFor(s.adapterId)}</span>
       <span class="recent-title">${esc(title)}</span>
       <span class="recent-meta">${esc(s.adapterId)}${folder ? ' · ' + esc(folder) : ''} · ${esc(when)}</span>
@@ -145,7 +145,7 @@ export function renderHtml(
     { id: 'Grid',           label: 'Grid',           svg: tileGrid,        kbd: SHORTCUTS.layoutGrid },
     { id: 'TerminalFocus',  label: 'Terminal Focus', svg: tileTerm,        kbd: SHORTCUTS.layoutTerminalFocus },
   ].map((t) => `
-    <a class="tile" href="#" onclick="post({type:'layout', preset:'${t.id}'});return false;">
+    <a class="tile" href="#" data-action="layout" data-preset="${t.id}">
       <div class="tile-art">${t.svg}</div>
       <div class="tile-foot">
         <span class="tile-name">${t.label}</span>
@@ -357,9 +357,9 @@ export function renderHtml(
         <div class="tiles">${layoutTiles}</div>
 
         <div class="footer-actions">
-          <a href="#" onclick="post({type:'restoreLayout'});return false;">Reset layout <span class="kbd kbd-lg">${SHORTCUTS.restoreLayout}</span></a>
-          <a href="#" onclick="post({type:'resumeLast'});return false;">Resume last <span class="kbd kbd-lg">${SHORTCUTS.resumeLast}</span></a>
-          <a href="#" onclick="post({type:'refresh'});return false;">Refresh <span class="kbd kbd-lg">${SHORTCUTS.refresh}</span></a>
+          <a href="#" data-action="restoreLayout">Reset layout <span class="kbd kbd-lg">${SHORTCUTS.restoreLayout}</span></a>
+          <a href="#" data-action="resumeLast">Resume last <span class="kbd kbd-lg">${SHORTCUTS.resumeLast}</span></a>
+          <a href="#" data-action="refresh">Refresh <span class="kbd kbd-lg">${SHORTCUTS.refresh}</span></a>
         </div>
       </div>
     </div>
@@ -374,6 +374,30 @@ export function renderHtml(
     vscode.postMessage(msg);
     setTimeout(() => { locked = false; }, 600);
   }
+
+  // Delegated click handler — converts data-action attributes into postMessage calls.
+  document.addEventListener('click', (e) => {
+    const el = e.target instanceof Element ? e.target.closest('[data-action]') : null;
+    if (!el) return;
+    e.preventDefault();
+    const action = el.getAttribute('data-action');
+    switch (action) {
+      case 'newSession':
+        post({ type: 'newSession', adapterId: el.getAttribute('data-adapter') });
+        break;
+      case 'resume': {
+        const raw = el.getAttribute('data-session') || '';
+        try { post({ type: 'resume', session: JSON.parse(raw) }); } catch {}
+        break;
+      }
+      case 'layout':
+        post({ type: 'layout', preset: el.getAttribute('data-preset') });
+        break;
+      case 'restoreLayout': post({ type: 'restoreLayout' }); break;
+      case 'resumeLast':    post({ type: 'resumeLast' }); break;
+      case 'refresh':       post({ type: 'refresh' }); break;
+    }
+  });
 
   const input = document.getElementById('prompt-input');
   const agent = document.getElementById('prompt-agent');

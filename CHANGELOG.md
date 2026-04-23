@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.15 — 2026-04-23
+
+Fixes hub buttons.
+
+- The CSP added in 0.0.14 blocked inline `onclick` handlers, so nothing in
+  the Agent Hub was clickable — layout tiles, recent sessions, footer
+  links. Converted every handler to `data-action` attributes driven by a
+  single delegated listener inside the nonce-allowed `<script>` block.
+
 ## 0.0.14 — 2026-04-23
 
 Pre-release hardening pass.
