@@ -2,7 +2,7 @@
   "name": "cli-agent-hub",
   "displayName": "CLI Agent Hub",
   "description": "Agent Hub — launch and resume Claude, Codex, Cursor, and Gemini sessions from a VS Code home tab with keyboard shortcuts and layout presets.",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "publisher": "aloncarmel",
   "author": {
     "name": "Alon Carmel"

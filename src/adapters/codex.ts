@@ -52,8 +52,7 @@ export class CodexAdapter implements CliAdapter {
   }
 
   buildResumeCommand(session: CliSession, _ctx: LaunchContext): string {
-    // Codex CLI resume-by-path. Quote in case of spaces.
-    return `${this.cmd()} resume "${session.sessionId}"`;
+    return `${this.cmd()} resume ${shellQuote(session.sessionId)}`;
   }
 
   buildPromptCommand(prompt: string, _ctx: LaunchContext): string {

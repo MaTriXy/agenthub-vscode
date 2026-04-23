@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.14 — 2026-04-23
+
+Pre-release hardening pass.
+
+- **Security**: `which()` no longer shells out — walks `PATH` directly, removing a command-injection vector when users configure custom CLI paths in settings.
+- **Security**: session IDs are now POSIX-quoted in Claude/Codex resume commands, preventing any shell interpretation of transcript filenames.
+- **Privacy**: dropped the `microsoft.github.io/vscode-codicons` CDN load — the hub no longer makes any network request. Inline Unicode glyphs replace codicons.
+- **Hardening**: explicit Content-Security-Policy on the hub webview with a per-render script nonce.
+
 ## 0.0.13 — 2026-04-22
 
 First Marketplace release.

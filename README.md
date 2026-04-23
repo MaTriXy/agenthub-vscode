@@ -35,7 +35,7 @@ Each CLI has its own adapter with capability flags — no assumption that every 
 | **Cursor** | ✅ | — | — |
 | **Gemini** | ✅ | — | — |
 
-Session titles are parsed from the first user message. Working directories are extracted from each transcript's `cwd` field so paths with dots in them (like `/Users/alon.carmel/…`) resolve correctly.
+Session titles are parsed from the first user message. Working directories are extracted from each transcript's `cwd` field so paths with dots in them (e.g. `/Users/jane.doe/…`) resolve correctly.
 
 ### Explorer sidebar section
 An **Agent Sessions** group joins Explorer / Outline / Timeline in the built-in sidebar. Each CLI is a collapsible node; expand to see its sessions; click to resume in a new terminal. Auto-refreshes when you peek.

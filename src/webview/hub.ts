@@ -112,12 +112,12 @@ export function renderHtml(
   workspacePath?: string,
 ): string {
   const installedAdapters = adapters.filter((a) => installed.get(a.id));
-  const iconFor = (id: string) => ({ claude: 'sparkle', codex: 'code', cursor: 'edit', gemini: 'star-full' }[id] || 'rocket');
+  const iconFor = (id: string) => ({ claude: '✦', codex: '◆', cursor: '▸', gemini: '★' }[id] || '●');
 
   const startButtons = installedAdapters.map((a, i) => `
     ${i > 0 ? '<span class="start-sep">·</span>' : ''}
     <a class="start-link" href="#" onclick="post({type:'newSession', adapterId:'${a.id}'});return false;">
-      <span class="start-icon codicon codicon-${iconFor(a.id)}"></span>
+      <span class="start-icon">${iconFor(a.id)}</span>
       <span class="start-name">${esc(a.displayName.replace(/ CLI$/, ''))}</span>
       <span class="kbd kbd-xl">${SHORTCUTS[a.id] ?? ''}</span>
     </a>
@@ -133,7 +133,7 @@ export function renderHtml(
     const when = s.updatedAt ? relative(s.updatedAt) : '';
     return `
     <a class="recent" href="#" onclick='post({type:"resume", session:${JSON.stringify(s).replace(/'/g, "&#39;")}});return false;' title="${esc(s.workspacePath ?? '')}\n${esc(s.sessionId)}">
-      <span class="recent-icon codicon codicon-${iconFor(s.adapterId)}"></span>
+      <span class="recent-icon">${iconFor(s.adapterId)}</span>
       <span class="recent-title">${esc(title)}</span>
       <span class="recent-meta">${esc(s.adapterId)}${folder ? ' · ' + esc(folder) : ''} · ${esc(when)}</span>
     </a>`;
@@ -154,11 +154,19 @@ export function renderHtml(
     </a>
   `).join('');
 
+  const nonce = Math.random().toString(36).slice(2);
+  const csp = [
+    `default-src 'none'`,
+    `img-src 'self' https: data:`,
+    `style-src 'unsafe-inline'`,
+    `script-src 'nonce-${nonce}'`,
+    `font-src 'self' data:`,
+  ].join('; ');
   return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8"/>
-<link href="https://microsoft.github.io/vscode-codicons/dist/codicon.css" rel="stylesheet"/>
+<meta http-equiv="Content-Security-Policy" content="${csp}">
 <style>
   :root { color-scheme: dark light; }
   body {
@@ -256,7 +264,6 @@ export function renderHtml(
     display: flex; align-items: center; gap: 6px;
     font-family: var(--vscode-editor-font-family, monospace);
   }
-  .cwd-note .codicon { font-size: 12px; }
 
   /* Prompt box — centered under hero */
   .prompt-box {
@@ -329,7 +336,7 @@ export function renderHtml(
       </div>
     </div>
     <div class="cwd-note">
-      <span class="codicon codicon-folder"></span>
+      <span>📁</span>
       ${workspacePath ? esc(workspacePath) : '<em>no folder open</em>'}
     </div>` : ''}
 
@@ -358,7 +365,7 @@ export function renderHtml(
     </div>
   </div>
 
-<script>
+<script nonce="${nonce}">
   const vscode = acquireVsCodeApi();
   let locked = false;
   function post(msg){

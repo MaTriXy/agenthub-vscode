@@ -59,7 +59,7 @@ export class ClaudeAdapter implements CliAdapter {
   }
 
   buildResumeCommand(session: CliSession, _ctx: LaunchContext): string {
-    return `${this.cmd()} --resume ${session.sessionId}`;
+    return `${this.cmd()} --resume ${shellQuote(session.sessionId)}`;
   }
 
   buildPromptCommand(prompt: string, _ctx: LaunchContext): string {
@@ -79,7 +79,7 @@ function resolveProjectDir(name: string): string | undefined {
   for (let i = 0; i < name.length; i++) if (name[i] === '-') positions.push(i);
   const naive = '/' + name.slice(1).replace(/-/g, '/');
   if (fs.existsSync(naive)) return naive;
-  // Try each dash as a dot (common cases first: username like alon.carmel early in path)
+  // Try each dash as a dot (common when usernames or hostnames contain dots).
   for (const pos of positions) {
     const chars = name.split('');
     chars[pos] = '.';
